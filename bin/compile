@@ -24,7 +24,7 @@ export_env_dir $env_dir
 export LD_LIBRARY_PATH=$cache_dir/lib:$LD_LIBRARY_PATH
 export LD_RUN_PATH=$cache_dir/lib:$LD_RUN_PATH
 export PATH=$cache_dir:$PATH
-export DESTDIR=$cache_dir:$DESTDIR
+export DESTDIR=$cache_dir
 
 cd /tmp && curl -O http://hivelocity.dl.sourceforge.net/project/fuse/fuse-2.X/2.9.3/fuse-2.9.3.tar.gz
 cd /tmp && curl -O https://codeload.github.com/s3fs-fuse/s3fs-fuse/tar.gz/master
