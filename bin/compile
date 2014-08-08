@@ -5,7 +5,7 @@ cache_dir=$2
 env_dir=$3
 
 export PREFIX=$cache_dir
-export PKG_CONFIG_PATH=$cache_dir/usr/bin/pkg-config
+export PKG_CONFIG_PATH=$cache_dir/usr/lib
 
 export_env_dir() {
   env_dir=$1
