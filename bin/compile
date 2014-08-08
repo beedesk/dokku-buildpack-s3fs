@@ -38,8 +38,8 @@ mkdir /tmp/s3
 cd /tmp && tar -xvf fuse-2.9.3.tar.gz -C /tmp/fuse
 cd /tmp && tar -xvf s3fuse.tar.gz -C /tmp/s3
 
-cd /tmp/fuse/* && ./configure --exec-prefix=$cache_dir --prefix=$cache_dir/LIBRARY_PATH --disable-kernel-module && make -j 2 && make install
-cd /tmp/s3/* && ./autogen.sh && ./configure --exec-prefix=$cache_dir --prefix=$cache_dir && make -j 2 && make install
+cd /tmp/fuse/* && ./configure --exec-prefix=$cache_dir --disable-kernel-module && make -j 2 && make install
+cd /tmp/s3/* && ./autogen.sh && ./configure --exec-prefix=$cache_dir && make -j 2 && make install
 
 $cache_dir/bin/s3fs $AWSBUCKET /app/$MOUNTPOINT
 
