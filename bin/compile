@@ -36,10 +36,10 @@ cd /tmp && tar -xvf fuse-2.9.3.tar.gz -C /tmp/fuse
 cd /tmp && tar -xvf s3fuse.tar.gz -C /tmp/s3
 
 cd /tmp/fuse/* && ./configure --prefix $PREFIX
-cd /tmp/fuse/* && make -j 2 && make install
+cd /tmp/fuse/* && make -j 2 && make install --prefix $PREFIX
 
 cd /tmp/s3/* && ./autogen.sh && ./configure --prefix $PREFIX
-cd /tmp/s3/* && make -j 2 && make install
+cd /tmp/s3/* && make -j 2 && make install --prefix $PREFIX
 
 $PREFIX/bin/s3fs $AWSBUCKET /app/$MOUNTPOINT
 
