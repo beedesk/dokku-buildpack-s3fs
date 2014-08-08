@@ -55,5 +55,4 @@ if [ ! -f /app/$AWSMOUNTPOINT ]; then
 fi
 
 export S3_CMD=$cache_dir/s3fs/usr/local/bin/s3fs
-$S3_CMD $AWSBUCKET /app/$AWSMOUNTPOINT
 exit 0
