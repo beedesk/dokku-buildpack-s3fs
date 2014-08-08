@@ -54,5 +54,6 @@ if [ ! -f /app/$AWSMOUNTPOINT ]; then
     mkdir -pv /app/$AWSMOUNTPOINT
 fi
 
+modprobe fuse
 $S3_CMD $AWSBUCKET /app/$AWSMOUNTPOINT
 exit 0
