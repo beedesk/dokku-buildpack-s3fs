@@ -27,20 +27,15 @@ mv /tmp/master /tmp/s3fuse.tar.gz
 
 rm -rf /tmp/fuse
 rm -rf /tmp/s3
-rm -rf $PREFIX
-mkdir $PREFIX
 mkdir /tmp/fuse
 mkdir /tmp/s3
 
 cd /tmp && tar -xvf fuse-2.9.3.tar.gz -C /tmp/fuse
 cd /tmp && tar -xvf s3fuse.tar.gz -C /tmp/s3
 
-cd /tmp/fuse/* && ./configure --prefix $PREFIX
-cd /tmp/fuse/* && make -j 2 && make install --prefix $PREFIX
+cd /tmp/fuse/* && ./configure --prefix $cache_dir && make -j 2 && make install
+cd /tmp/s3/* && ./autogen.sh && ./configure --prefix $cache_dir && make -j 2 && make install
 
-cd /tmp/s3/* && ./autogen.sh && ./configure --prefix $PREFIX
-cd /tmp/s3/* && make -j 2 && make install --prefix $PREFIX
-
-$PREFIX/bin/s3fs $AWSBUCKET /app/$MOUNTPOINT
+$cache_dir/bin/s3fs $AWSBUCKET /app/$MOUNTPOINT
 
 exit 0
