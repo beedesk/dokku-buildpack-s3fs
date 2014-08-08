@@ -46,7 +46,10 @@ if [ ! -f "$cache_dir/s3_built" ]; then
 	cd /tmp/fuse/* && ./configure --disable-kernel-module && make -j 2 && make DESTDIR=$cache_dir install
 	cd /tmp/s3/* && ./autogen.sh && ./configure  && make -j 2 && make DESTDIR=$cache_dir install 
 
-	$cache_dir/bin/s3fs $AWSBUCKET /app/$MOUNTPOINT
 	touch $cache_dir/s3_built
 fi
+
+export S3_CMD=/app/tmp/cache/usr/local/bin/s3fs
+
+$S3_CMD $AWSBUCKET /app/$MOUNTPOINT
 exit 0
