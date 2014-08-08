@@ -1,5 +1,9 @@
 #!/bin/sh
 
+build_dir=$1
+cache_dir=$2
+env_dir=$3
+
 export PREFIX=$cache_dir
 
 export_env_dir() {
@@ -15,7 +19,7 @@ export_env_dir() {
   fi
 }
 
-export_env_dir
+export_env_dir $env_dir
 
 cd /tmp && curl -O http://hivelocity.dl.sourceforge.net/project/fuse/fuse-2.X/2.9.3/fuse-2.9.3.tar.gz
 cd /tmp && curl -O https://codeload.github.com/s3fs-fuse/s3fs-fuse/tar.gz/master
