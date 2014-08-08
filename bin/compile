@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 build_dir=$1
-cache_dir=$2
+cache_dir=/app/vendor/s3fs
 env_dir=$3
 export_env_dir() {
   env_dir=$1
@@ -34,6 +34,7 @@ if [ ! -f "$cache_dir/s3_built" ]; then
 	rm -rf /tmp/s3
 	mkdir /tmp/fuse
 	mkdir /tmp/s3
+	mkdir -pv $cache_dir
 
 	cd /tmp && tar -xvf fuse-2.9.3.tar.gz -C /tmp/fuse
 	cd /tmp && tar -xvf s3fuse.tar.gz -C /tmp/s3
@@ -54,6 +55,6 @@ if [ ! -f /app/$AWSMOUNTPOINT ]; then
     mkdir -pv /app/$AWSMOUNTPOINT
 fi
 
-modprobe fuse
+
 $S3_CMD $AWSBUCKET /app/$AWSMOUNTPOINT
 exit 0
