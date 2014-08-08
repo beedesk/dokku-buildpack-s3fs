@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 build_dir=$1
-cache_dir=/app/vendor/s3fs
+cache_dir=$1/vendor/s3fs
 env_dir=$3
 export_env_dir() {
   env_dir=$1
