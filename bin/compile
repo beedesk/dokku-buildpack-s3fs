@@ -54,12 +54,6 @@ if [ ! -f /app/$AWSMOUNTPOINT ]; then
     mkdir -pv /app/$AWSMOUNTPOINT
 fi
 
-mkdir -p $build_dir/bin
-
-cd $build_dir/bin
-
-ln -s ../vendor/s3fs/usr/local/bin/* .
-
-export S3_CMD=/app/bin/s3fs
+export S3_CMD=$cache_dir/s3fs/usr/local/bin/s3fs
 $S3_CMD $AWSBUCKET /app/$AWSMOUNTPOINT
 exit 0
