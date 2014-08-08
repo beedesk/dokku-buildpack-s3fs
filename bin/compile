@@ -40,6 +40,7 @@ cd /tmp && tar -xvf s3fuse.tar.gz -C /tmp/s3
 
 export CFLAGS=-I$cache_dir/usr/local/include
 export CXXFLAGS=-I$cache_dir/usr/local/include
+export LDFLAGS=-L$cache_dir/usr/local/include
 cd /tmp/fuse/* && ./configure --disable-kernel-module && make -j 2 && make DESTDIR=$cache_dir install
 cd /tmp/s3/* && ./autogen.sh && ./configure  && make -j 2 && make DESTDIR=$cache_dir install 
 
