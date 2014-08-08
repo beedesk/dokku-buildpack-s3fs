@@ -3,26 +3,25 @@
 build_dir=$1
 cache_dir=$2
 env_dir=$3
+export_env_dir() {
+  env_dir=$1
+  whitelist_regex=${2:-''}
+  blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
+  if [ -d "$env_dir" ]; then
+    for e in $(ls $env_dir); do
+      echo "$e" | grep -E "$whitelist_regex" | grep -qvE "$blacklist_regex" &&
+      export "$e=$(cat $env_dir/$e)"
+      :
+    done
+  fi
+}
 
+export_env_dir $env_dir
 if [ ! -f "$cache_dir/s3_built" ]; then
 	export PREFIX=$cache_dir
 	export PKG_CONFIG_PATH=$cache_dir/usr/local/lib/pkgconfig
 	export CFLAGS=-I$cache_dir/usr/local/include
 
-	export_env_dir() {
-	  env_dir=$1
-	  whitelist_regex=${2:-''}
-	  blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
-	  if [ -d "$env_dir" ]; then
-	    for e in $(ls $env_dir); do
-	      echo "$e" | grep -E "$whitelist_regex" | grep -qvE "$blacklist_regex" &&
-	      export "$e=$(cat $env_dir/$e)"
-	      :
-	    done
-	  fi
-	}
-
-	export_env_dir $env_dir
 	export LD_LIBRARY_PATH=$cache_dir/lib:$cache_dir/usr/local/lib:$cache_dir/usr/lib:$LD_LIBRARY_PATH
 	export LD_RUN_PATH=$cache_dir/lib:$cache_dir/usr/lib:$LD_RUN_PATH
 	export PATH=$cache_dir/bin:$cache_dir/usr/bin:$cache_dir/usr/sbin:$cache_dir/usr/local/sbin:$cache_dir/usr/local/bin:$PATH
