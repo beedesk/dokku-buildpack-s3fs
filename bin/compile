@@ -4,8 +4,7 @@ build_dir=$1
 cache_dir=$2
 env_dir=$3
 
-if [ -e "$cache_dir/s3_built" ]
-then
+if [ ! -f "$cache_dir/s3_built" ]; then
 	export PREFIX=$cache_dir
 	export PKG_CONFIG_PATH=$cache_dir/usr/local/lib/pkgconfig
 	export CFLAGS=-I$cache_dir/usr/local/include
