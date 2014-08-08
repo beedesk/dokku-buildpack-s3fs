@@ -17,6 +17,7 @@ export_env_dir() {
 }
 
 export_env_dir $env_dir
+rm -rvf $cache_dir/s3_built
 if [ ! -f "$cache_dir/s3_built" ]; then
 	export PREFIX=$cache_dir
 	export PKG_CONFIG_PATH=$cache_dir/usr/local/lib/pkgconfig
