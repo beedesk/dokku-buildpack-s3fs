@@ -51,5 +51,5 @@ fi
 
 export S3_CMD=/app/tmp/cache/usr/local/bin/s3fs
 
-$S3_CMD $AWSBUCKET /app/$MOUNTPOINT
+$S3_CMD $AWSBUCKET /app/$AWSMOUNTPOINT
 exit 0
