@@ -16,9 +16,14 @@ s3fs_download_url=https://codeload.github.com/s3fs-fuse/s3fs-fuse/tar.gz/v${s3fs
 #
 # path and env
 #
-build_dir=/tmp/buildpack/build
-cache_dir=~/vendor/s3fs
+build_dir=$1
+cache_dir=$2
 env_dir=$3
+bp_dir=$(cd $(dirname $0); cd ..; pwd)
+
+echo "Build dir: " $build_dir
+echo "Cache dir: " $cache_dir
+
 export_env_dir() {
   env_dir=$1
   whitelist_regex=${2:-''}
@@ -36,8 +41,8 @@ export_env_dir() {
 # main
 #
 export_env_dir $env_dir
-rm -rvf $cache_dir/s3_built
-if [ ! -f "$cache_dir/s3_built" ]; then
+rm -rvf $build_dir/s3fs/s3_built
+if [ ! -f "$build_dir/s3fs/s3_built" ]; then
 
 	#
 	# download
@@ -55,28 +60,35 @@ if [ ! -f "$cache_dir/s3_built" ]; then
 	#
 	# compile
 	#
-	export PREFIX=$cache_dir
-	export PKG_CONFIG_PATH=$cache_dir/usr/local/lib/pkgconfig
-	export CFLAGS=-I$cache_dir/usr/local/include
+	export PREFIX=$build_dir/s3fs
+	export PKG_CONFIG_PATH=$build_dir/s3fs/usr/local/lib/pkgconfig
+	export CFLAGS=-I$build_dir/s3fs/usr/local/include
 
-	export LD_LIBRARY_PATH=$cache_dir/lib:$cache_dir/usr/local/lib:$cache_dir/usr/lib:$LD_LIBRARY_PATH
-	export LD_RUN_PATH=$cache_dir/lib:$cache_dir/usr/lib:$LD_RUN_PATH
-	export PATH=$cache_dir/bin:$cache_dir/usr/bin:$cache_dir/usr/sbin:$cache_dir/usr/local/sbin:$cache_dir/usr/local/bin:$PATH
+	export LD_LIBRARY_PATH=$build_dir/s3fs/lib:$build_dir/s3fs/usr/local/lib:$build_dir/s3fs/usr/lib:$LD_LIBRARY_PATH
+	export LD_RUN_PATH=$build_dir/s3fs/lib:$build_dir/s3fs/usr/lib:$LD_RUN_PATH
+	export PATH=$build_dir/s3fs/bin:$build_dir/s3fs/usr/bin:$build_dir/s3fs/usr/sbin:$build_dir/s3fs/usr/local/sbin:$build_dir/s3fs/usr/local/bin:$PATH
 
-	export CFLAGS=-I$cache_dir/usr/local/include
-	export CXXFLAGS=-I$cache_dir/usr/local/include
-	export LDFLAGS=-L$cache_dir/usr/local/lib
+	export CFLAGS=-I$build_dir/s3fs/usr/local/include
+	export CXXFLAGS=-I$build_dir/s3fs/usr/local/include
+	export LDFLAGS=-L$build_dir/s3fs/usr/local/lib
 
-	mkdir -pv $cache_dir
-	cd /tmp/fuse/fuse-${fuse_version_major}.${fuse_version_minor} && ./configure --disable-kernel-module && make -j 2 && make DESTDIR=$cache_dir install
-	cd /tmp/s3fs/s3fs-fuse-${s3fs_version} && ./autogen.sh && ./configure  && make -j 2 && make DESTDIR=$cache_dir install
+	mkdir -pv $build_dir/s3fs
+	cd /tmp/fuse/fuse-${fuse_version_major}.${fuse_version_minor} && ./configure --disable-kernel-module && make -j 2 && make DESTDIR=$build_dir/s3fs install
+	cd /tmp/s3fs/s3fs-fuse-${s3fs_version} && ./autogen.sh && ./configure  && make -j 2 && make DESTDIR=$build_dir/s3fs install
 
-	touch $cache_dir/s3_built
+	touch $build_dir/s3fs/s3_built
 fi
 
-if [ ! -f ~/$AWSMOUNTPOINT ]; then
-    mkdir -pv ~/$AWSMOUNTPOINT
+# Create Mount point
+if [ ! -f ~/$S3FS_AWS_MOUNT_POINT ]; then
+    mkdir -pv ~/$S3FS_AWS_MOUNT_POINT
 fi
 
-export S3_CMD=$cache_dir/s3fs/usr/local/bin/s3fs
+# Runtime & Multi-buildpack exports
+info "Creating runtime environment"
+mkdir -p $build_dir/.profile.d
+echo "export S3_CMD=\$HOME/s3fs/usr/local/bin/s3fs" > $build_dir/.profile.d/s3fs.sh
+echo "export LD_LIBRARY_PATH=\$HOME/s3fs/lib:\$HOME/s3fs/usr/local/lib:\$HOME/s3fs/usr/lib:$LD_LIBRARY_PATH" >> $build_dir/.profile.d/s3fs.sh
+echo "export PATH=\$HOME/s3fs/bin:\$HOME/s3fs/usr/bin:\$HOME/s3fs/usr/sbin:\$HOME/s3fs/usr/local/sbin:\$HOME/s3fs/usr/local/bin:\$PATH" >> $build_dir/.profile.d/s3fs.sh
+
 exit 0
