@@ -3,14 +3,12 @@
 This is a [buildpack](http://devcenter.heroku.com/articles/buildpacks) for FUSE on AWS S3.
 
 ## History and Status
-The script forked from `znetstar/heroku-buildpack-s3fs` which seemed to be intent for heroku. The original buildpack built s3fs binary properly but did not seem to be completed.
-
-I was hitting permission errors on `modprobe` trying to mount a drive on heroku. I thought it could not be fixed.
+The script forked from `znetstar/heroku-buildpack-s3fs` which seemed to be intent for heroku. The original buildpack builds both binaries properly but did not seem to be a complete solution. I was hitting permission errors on `modprobe` trying to mount a drive on heroku. I thought it could not be fixed.
 
 I ported the script to [dokku](https://github.com/progrium/dokku) and was able to get it to "work" on [v3.0.2](https://github.com/progrium/dokku/releases/tag/v0.3.12). (see, #catches section below)
 
 ## How it Works
-This buildpack downloads both fuse and s3fs-fuse projects from its project locations (sourceforge and github respectively), builds them and mount a single s3 bucket with a single location.
+This buildpack downloads both fuse and s3fs-fuse projects from its project locations (sourceforge and github respectively), builds the binaries and mount a single s3 bucket with a single location.
 
 The s3 buckets details and location are specified with these environments variables in your app:
 
@@ -21,16 +19,16 @@ dokku config:set << your appname >> AWS_S3_BUCKET_NAME=...       # or, S3FS_AWS_
 dokku config:set << your appname >> S3FS_AWS_MOUNT_POINT=...     # must be prefixed with S3FS_
 ```
 
-Then, you would need to add install [multi buildpack](https://github.com/heroku/heroku-buildpack-multi). (warning: I have only tested it with  and it might not work as a single buildpacks.)
+Then, you would need to install [multi buildpack](https://github.com/heroku/heroku-buildpack-multi). (warning: I have only tested it with and it might not work as a single buildpacks.)
 
-After you [multi buildpack], add this line in .buildpacks
+After you install [multi buildpack], add this line in .buildpacks
 
 ```bash
 cd << project root >>   # your local git repo
 echo https://github.com/beedesk/dokku-buildpack-s3fs.git >> .buildpacks
 ```
 
-Fuse and s3fs-fuse requires additional privileges that need to be specified. This [docker-options](https://github.com/dyson/dokku-docker-options) plugin can be used.
+Fuse and s3fs-fuse require additional privileges that need to be specified. This [docker-options](https://github.com/dyson/dokku-docker-options) plugin can be used.
 
 ```bash
 cd << vagrant root >>    # 
@@ -74,3 +72,18 @@ Mounting s3fs takes a good minute for me on my local machine, so be patient.
 
 ## Catches
 Mounting `FUSE` drive seemed to require root access (inside the docker container). So, it must be done before the `setuidgid` call. I was doing it on `.profile.d/sf3s.sh` which is created at the build step. I am not very confident it is a supported usage.
+
+I have only tested it on ubuntu 14.0.? LTS.
+
+If you see erorr building the binaries, you might need to install some of the following libs with apt-get on the host machine.
+
+```bash
+cd << vagrant root >>    # 
+vagrant ssh              # or, ssh -i ec2@private.pem ec2....
+
+sudo apt-get install daemontools
+sudo apt-get install build-essential
+sudo apt-get install libtool
+sudo apt-get install g++ (does it included in libtool already?)
+sudo apt-get install pkg-config
+```
