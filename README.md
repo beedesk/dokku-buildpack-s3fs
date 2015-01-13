@@ -5,7 +5,7 @@ This is a [buildpack](http://devcenter.heroku.com/articles/buildpacks) for FUSE 
 ## History and Status
 The buildpack is forked from `znetstar/heroku-buildpack-s3fs`, which apparently written for heroku. Znetstar's built both fuse and s3fs-fuse binaries properly but did not mount the filesystem. On heroku, I was hitting permission errors related to `modprobe` trying to mount a filesystem. I thought it was because fuse capacity is not compiled with heroku host OS, or it was not exposed to its app container. I suspected the problem could not be fixed, until Heorku decided to enable fuse. (Please kindly let me know if I was mistaken).
 
-I ported the script to [dokku](https://github.com/progrium/dokku) and was able to get it to "work" on [v3.0.2](https://github.com/progrium/dokku/releases/tag/v0.3.12). (see, #catches section below)
+I ported the script to [dokku](https://github.com/progrium/dokku) and was able to get it to work, with [dokku v3.0.2](https://github.com/progrium/dokku/releases/tag/v0.3.12). (see, #catches section below)
 
 ## How it Works
 This buildpack downloads both fuse and s3fs-fuse projects from its project locations (sourceforge and github respectively), builds the binaries and mount a single s3 bucket with a single location.
@@ -70,7 +70,7 @@ git push dokku master    # your repo and branch might be different
 On a non-EC2 machine, mounting might take a good minute, so be patient. On a EC2, mounting takes only a few seconds.
 
 ## Catches
-Mounting `FUSE` drive requires root access (within the docker container). The deploy / run steps [buildstep](https://github.com/progrium/buildstep) happened to run as root (within the docker container) during the `.profile.d/` step. It is why this buildstep mounts the filesytem with `.profile.d/s3fs.sh` script generating during `bin/compile` phrase. In long run, I suspect the `.profile.d/` step might be tighten.
+Mounting `FUSE` drive requires root access (within the docker container). The `.profile.d/` step of deploy / run command in [buildstep](https://github.com/progrium/buildstep) happened to run as root (within the docker container). It is why this buildstep mounts the filesytem with `.profile.d/s3fs.sh` script generating during `bin/compile` phrase. In long run, I suspect the `.profile.d/` step might be tighten.
 
 I have only tested it on ubuntu 14.0 LTS.
 
