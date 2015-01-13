@@ -70,11 +70,11 @@ git push dokku master    # your repo and branch might be different
 On a non-EC2 machine, mounting might take a good minute, so be patient. On a EC2, mounting takes only a few seconds.
 
 ## Catches
-Mounting `FUSE` drive requires root access (within the docker container). The deploy / run steps [buildstep](https://github.com/progrium/buildstep) happened to run as root (within the docker container) during the `.profile.d/` step. It is why this buildstep mounts the filesytem with `.profile.d/s3fs.sh` script generating during `bin/compile` phrase. In long run, I suspect the `.profile.d/` step might be stricken.
+Mounting `FUSE` drive requires root access (within the docker container). The deploy / run steps [buildstep](https://github.com/progrium/buildstep) happened to run as root (within the docker container) during the `.profile.d/` step. It is why this buildstep mounts the filesytem with `.profile.d/s3fs.sh` script generating during `bin/compile` phrase. In long run, I suspect the `.profile.d/` step might be tighten.
 
 I have only tested it on ubuntu 14.0 LTS.
 
-If you see erorr building the binaries, you might need to install some of the following libs with apt-get on the host machine.
+If you see an error building the binaries, you might need to install some of the following libs with apt-get on the host machine.
 
 ```bash
 cd << vagrant root >>    # 
