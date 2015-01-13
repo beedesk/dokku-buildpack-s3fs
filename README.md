@@ -26,7 +26,7 @@ dokku config:set << your appname >> S3FS_CACHE_DIR               # default is "/
 dokku config:set << your appname >> S3FS_MOUNT_OPTIONS           # default is "-o allow_other -o use_cache=${S3FS_CACHE_DIR}"
 ```
 
-This buildpack assume [multi buildpack](https://github.com/heroku/heroku-buildpack-multi) environments, and might not work as a single buildpacks. If you have not already installed the multi buildpack, please follow links and add multi buildpack first.
+This buildpack assumes [multi buildpack](https://github.com/heroku/heroku-buildpack-multi) environments, and might not work as a single buildpacks. If you have not already installed the multi buildpack, please follow links and add multi buildpack first.
 
 With [multi buildpack] installed, add this line in .buildpacks
 
