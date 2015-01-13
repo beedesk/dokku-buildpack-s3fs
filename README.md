@@ -19,6 +19,13 @@ dokku config:set << your appname >> AWS_S3_BUCKET_NAME=...       # or, S3FS_AWS_
 dokku config:set << your appname >> S3FS_AWS_MOUNT_POINT=...     # must be prefixed with S3FS_
 ```
 
+Optionally, mounting options can be added with these enviorments variables:
+
+```bash
+Sdokku config:set << your appname >> S3FS_CACHE_DIR                # default is "/tmp/s3fs"
+Sdokku config:set << your appname >> S3FS_MOUNT_OPTIONS           # default is "-o allow_other -o use_cache=${S3FS_CACHE_DIR}"
+```
+
 This buildpack assume [multi buildpack](https://github.com/heroku/heroku-buildpack-multi) environments, and might not work as a single buildpacks. If you have not already installed the multi buildpack, please follow links and add multi buildpack first.
 
 With [multi buildpack] installed, add this line in .buildpacks
