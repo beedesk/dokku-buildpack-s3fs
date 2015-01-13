@@ -43,7 +43,7 @@ dokku                    # now you should see these new options displayed
                          #     docker-options:add <app> OPTIONS_STRING  add an option string an app
                          #     docker-options <app> display docker options for an app
                          
-dokku docker-options:add --cap-add mknod --cap-add=sys_admin --device=/dev/fuse
+dokku docker-options:add << app name >> "--cap-add mknod --cap-add=sys_admin --device=/dev/fuse"
 
                          # Note 1:
                          # See, this issue [Docker with FUSE](https://github.com/docker/docker/issues/9448)
