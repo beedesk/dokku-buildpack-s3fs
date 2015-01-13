@@ -90,19 +90,31 @@ fi
 echo "Creating runtime environment"
 mkdir -p $build_dir/.profile.d
 echo "export S3_CMD=\$HOME/s3fs/usr/local/bin/s3fs" > $build_dir/.profile.d/s3fs.sh
-echo "export LD_LIBRARY_PATH=\$HOME/s3fs/lib:\$HOME/s3fs/usr/local/lib:\$HOME/s3fs/usr/lib:$LD_LIBRARY_PATH" >> $build_dir/.profile.d/s3fs.sh
+echo "export LD_LIBRARY_PATH=\$HOME/s3fs/lib:\$HOME/s3fs/usr/local/lib:\$HOME/s3fs/usr/lib:\$LD_LIBRARY_PATH" >> $build_dir/.profile.d/s3fs.sh
 echo "export PATH=\$HOME/s3fs/bin:\$HOME/s3fs/usr/bin:\$HOME/s3fs/usr/sbin:\$HOME/s3fs/usr/local/sbin:\$HOME/s3fs/usr/local/bin:\$PATH" >> $build_dir/.profile.d/s3fs.sh
 
 # Mount with .profile.d script which is running as root (will it change in the future?)
 cat >> $build_dir/.profile.d/s3fs.sh << EOF
 echo \${S3FS_AWS_ACCESS_KEY_ID:=\$AWS_ACCESS_KEY_ID}:\${S3FS_AWS_SECRET_ACCESS_KEY:=\$AWS_SECRET_ACCESS_KEY} > .passwd-s3fs
 chmod 600 .passwd-s3fs
-if [ ! -d "\$S3FS_AWS_MOUNT_POINT" ]; then
-  mkdir -p \$S3FS_AWS_MOUNT_POINT
-  chmod 777 \$S3FS_AWS_MOUNT_POINT
+
+# Create directories
+if [ ! -d "\${S3FS_AWS_MOUNT_POINT}" ]; then
+  mkdir -p \${S3FS_AWS_MOUNT_POINT}
+  chmod 777 \${S3FS_AWS_MOUNT_POINT}
 fi
-echo "Executing: " \${S3_CMD} -o allow_other \${S3FS_AWS_S3_BUCKET_NAME:=\$AWS_S3_BUCKET_NAME} \$S3FS_AWS_MOUNT_POINT
-\${S3_CMD} -o allow_other \${S3FS_AWS_S3_BUCKET_NAME:=\$AWS_S3_BUCKET_NAME} \$S3FS_AWS_MOUNT_POINT
+
+\${S3FS_CACHE_DIR:="/tmp/s3fs"}
+if [ ! -d "\${S3FS_CACHE_DIR}" ]; then
+  mkdir -p \${S3FS_CACHE_DIR}
+fi
+
+# Options
+\${S3FS_MOUNT_OPTIONS:="-o allow_other -o use_cache=\${S3FS_CACHE_DIR}"}
+
+# Mount
+echo "Executing: " \${S3_CMD}  \${S3FS_AWS_S3_BUCKET_NAME:=\$AWS_S3_BUCKET_NAME} \$S3FS_AWS_MOUNT_POINT \${S3FS_MOUNT_OPTIONS}
+\${S3_CMD} -o allow_other \${S3FS_AWS_S3_BUCKET_NAME:=\$AWS_S3_BUCKET_NAME} \$S3FS_AWS_MOUNT_POINT \${S3FS_MOUNT_OPTIONS}
 echo "s3fs exited with " \$?
 EOF
 
