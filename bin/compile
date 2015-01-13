@@ -104,13 +104,12 @@ if [ ! -d "\${S3FS_AWS_MOUNT_POINT}" ]; then
   chmod 777 \${S3FS_AWS_MOUNT_POINT}
 fi
 
-\${S3FS_CACHE_DIR:="/tmp/s3fs"}
-if [ ! -d "\${S3FS_CACHE_DIR}" ]; then
+if [ ! -d "\${S3FS_CACHE_DIR:="/tmp/s3fs"}" ]; then
   mkdir -p \${S3FS_CACHE_DIR}
 fi
 
 # Options
-\${S3FS_MOUNT_OPTIONS:="-o allow_other -o use_cache=\${S3FS_CACHE_DIR}"}
+echo "Mounting with options " \${S3FS_MOUNT_OPTIONS:="-o allow_other -o use_cache=\${S3FS_CACHE_DIR}"}
 
 # Mount
 echo "Executing: " \${S3_CMD}  \${S3FS_AWS_S3_BUCKET_NAME:=\$AWS_S3_BUCKET_NAME} \$S3FS_AWS_MOUNT_POINT \${S3FS_MOUNT_OPTIONS}
