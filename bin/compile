@@ -4,11 +4,11 @@
 # version
 #
 fuse_version_major=2
-fuse_version_minor=9.3
+fuse_version_minor=9.4
 s3fs_version=1.78
 
 fuse_archive_filename=fuse-${fuse_version_major}.${fuse_version_minor}.tar.gz
-fuse_download_url=http://hivelocity.dl.sourceforge.net/project/fuse/fuse-${fuse_version_major}.X/${fuse_version_major}.${fuse_version_minor}/${fuse_archive_filename}
+fuse_download_url=http://www.sourceforge.net/projects/fuse/files/fuse-${fuse_version_major}.X/${fuse_version_major}.${fuse_version_minor}/${fuse_archive_filename}
 
 s3fs_archive_filename=s3fs-fuse-${s3fs_version}.tar.gz
 s3fs_download_url=https://codeload.github.com/s3fs-fuse/s3fs-fuse/tar.gz/v${s3fs_version}
