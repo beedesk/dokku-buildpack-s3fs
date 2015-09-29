@@ -38,7 +38,8 @@ echo https://github.com/beedesk/dokku-buildpack-s3fs.git >> .buildpacks
 Fuse and s3fs-fuse require additional privileges that need to be specified. Earlier versions of dokku (such as v3.0.11) requires  [docker-options](https://github.com/dyson/dokku-docker-options) plugin. Newer versions (such as v3.0.26) has it builtin. The syntax is slightly different. The text below is for newer version.
 
 ```bash
-dokku docker-options:add << app name >> "run --cap-add mknod --cap-add=sys_admin --device=/dev/fuse"
+dokku docker-options:add << app name >> "deploy --privileged --cap-add=MKNOD --cap-add=SYS_ADMIN --device=/dev/fuse"
+dokku docker-options:add << app name >> "run --privileged --cap-add=MKNOD --cap-add=SYS_ADMIN --device=/dev/fuse"
 
                          # Note 1:
                          # See, this issue [Docker with FUSE](https://github.com/docker/docker/issues/9448)
