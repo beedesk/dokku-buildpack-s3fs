@@ -3,7 +3,7 @@
 This is a [buildpack](http://devcenter.heroku.com/articles/buildpacks) for FUSE on AWS S3.
 
 ## History and Status
-The buildpack is forked from `znetstar/heroku-buildpack-s3fs`, which apparently written for heroku. Znetstar's built both fuse and s3fs-fuse binaries properly but did not mount the filesystem. On heroku, I was hitting permission errors related to `modprobe` trying to mount a filesystem. I thought it was because fuse capacity is not compiled with heroku host OS, or it was not exposed to its app container. I suspected the problem could not be fixed, until Heorku decided to enable fuse. (Please kindly let me know if I was mistaken).
+The buildpack is forked from `znetstar/heroku-buildpack-s3fs`, which apparently written for heroku. Znetstar's built both fuse and s3fs-fuse binaries properly but did not mount the filesystem. On heroku, I was hitting permission errors related to `modprobe` trying to mount a filesystem. As of writting, `fuse` capacity is not compiled into heroku host OS, or it was not exposed to its app container. I suspected the problem could not be fixed by heroku user, until Heorku decided to enable it. 
 
 I ported the script to [dokku](https://github.com/progrium/dokku) and was able to get it to work, with [dokku v0.3.26](https://github.com/progrium/dokku/releases/tag/v0.3.26). (see, #catches section below)
 
@@ -60,9 +60,9 @@ git push dokku master    # your repo and branch might be different
 On a non-EC2 machine, mounting might take a good minute, so be patient. On a EC2, mounting takes only a few seconds.
 
 ## Catches
-Mounting `FUSE` drive requires root access (within the docker container). The `.profile.d/` step of deploy / run command in [buildstep](https://github.com/progrium/buildstep) happened to run as root (within the docker container). It is why this buildstep mounts the filesytem with `.profile.d/s3fs.sh` script generating during `bin/compile` phrase. In long run, I suspect the `.profile.d/` step might be tighten.
+Mounting `FUSE` drive requires root access (within the docker container). The `.profile.d/` step of deploy / run command in [buildstep](https://github.com/progrium/buildstep) happened to run as root (within the docker container). It is why this buildstep mounts the filesytem with `.profile.d/s3fs.sh` script generating during `bin/compile` phrase.
 
-I have only tested it on ubuntu 14.0 LTS.
+I have only tested it on ubuntu 14.0 LTS with Docker version 1.7.1, build 786b29d.
 
 If you see an error building the binaries, you might need to install some of the following libs with apt-get on the host machine.
 
